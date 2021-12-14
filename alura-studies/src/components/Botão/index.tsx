@@ -1,8 +1,8 @@
-import * as React from "react";
-import style from "./botao.module.scss";
+import React from 'react';
+import style from './botao.module.scss';
 
-class Botao extends React.Component <{
-  type?: "button" | "submit" | "reset" | undefined; 
+class Botao extends React.Component<{
+  type?: "button" | "submit" | "reset" | undefined
 }> {
   render() {
     const { type = "button" } = this.props;

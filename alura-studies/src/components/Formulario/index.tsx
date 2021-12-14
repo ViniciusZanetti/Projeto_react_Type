@@ -1,59 +1,74 @@
-import * as React from "react";
-import { ITarefa } from "../../types/tarefa";
-import Botao from "../Botão";
-import style from "./Formulario.module.scss";
+import React from 'react';
+import { ITarefa } from '../../types/tarefa';
+import Botao from '../Botão';
+import style from './Formulario.module.scss';
+import { v4 as uuidv4 } from 'uuid';
 
 class Formulario extends React.Component<{
   setTarefas: React.Dispatch<React.SetStateAction<ITarefa[]>>
 }> {
   state = {
     tarefa: "",
-    tempo: "00:00",
-  };
+    tempo: "00:00"
+  }
 
-  adicionarTarefas(evento: React.FormEvent<HTMLFormElement>) {
+  adicionarTarefa(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault();
-    this.props.setTarefas(tarefasAntigas => [...tarefasAntigas, {...this.state }])
-    console.log('state: ',this.state)
-}
+    this.props.setTarefas(tarefasAntigas => 
+      [
+        ...tarefasAntigas,
+        {
+          ...this.state,
+          selecionado: false,
+          completado: false,
+          id: uuidv4()
+        }
+      ]
+    )
+    this.setState({
+      tarefa: "",
+      tempo: "00:00"
+    })
+  }
+
   render() {
     return (
-      <form
-        className={style.novaTarefa}
-        onSubmit={this.adicionarTarefas.bind(this)}
-      >
+      <form className={style.novaTarefa} onSubmit={this.adicionarTarefa.bind(this)}>
         <div className={style.inputContainer}>
-          <label htmlFor="tarefa">adcione um novo estudo</label>
+          <label htmlFor="tarefa">
+            Adicione um novo estudo
+          </label>
           <input
             type="text"
             name="tarefa"
-            value={this.state.tarefa}
-            onChange={(evento) =>
-              this.setState({ tarefa: evento.target.value })
-            }
             id="tarefa"
-            placeholder="O que você quer estudar?"
+            value={this.state.tarefa}
+            onChange={evento => this.setState({ ...this.state, tarefa: evento.target.value })}
+            placeholder="O que você quer estudar"
             required
           />
         </div>
         <div className={style.inputContainer}>
-          <label>Tempo</label>
+          <label htmlFor="tempo">
+            Tempo
+          </label>
           <input
             type="time"
             step="1"
             name="tempo"
             value={this.state.tempo}
-            onChange={(evento) =>
-              this.setState({ ...this.state, tempo: evento.target.value })
-            }
+            onChange={evento => this.setState({ ...this.state, tempo: evento.target.value })}
             id="tempo"
             min="00:00:00"
             max="01:30:00"
+            required
           />
         </div>
-        <Botao>Adicionar</Botao>
+        <Botao type="submit">
+          Adicionar
+        </Botao>
       </form>
-    );
+    )
   }
 }
 
